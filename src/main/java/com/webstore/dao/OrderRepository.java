@@ -6,10 +6,10 @@ import org.hibernate.SessionFactory;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-public class HibernateOrderDAO implements OrderDAO {
+public class OrderRepository implements OrderDAO {
     private final SessionFactory sessionFactory;
 
-    public HibernateOrderDAO(SessionFactory sessionFactory) {
+    public OrderRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
 
     }
@@ -25,7 +25,9 @@ public class HibernateOrderDAO implements OrderDAO {
     public List<Order> getAllOrders() {
         EntityManager entityManager = sessionFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        List<Order> result = entityManager.createQuery("from Customer", Order.class).getResultList();
+//        List<Order> result = entityManager.createQuery("from Orders", Order.class).getResultList();
+        String sqlQuery = "select o from Order o";
+        List<Order> result = entityManager.createQuery(sqlQuery).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
         return result;
@@ -34,8 +36,9 @@ public class HibernateOrderDAO implements OrderDAO {
     public void deleteAll() {
         EntityManager entityManager = sessionFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("DELETE FROM customers");
+        entityManager.createNativeQuery("DELETE FROM orders");
         entityManager.getTransaction().commit();
         entityManager.close();
     }
+
 }
